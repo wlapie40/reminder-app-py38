@@ -16,7 +16,7 @@ from ..models import Notes
 class UserMailer:
     MSG_SUBJECTS = {
         "repetitions": "There are some notes to recall",
-        "activate": "Activate your account",
+        "activation": "Activate your account",
         "change_password": "Confirm changing password"
     }
 
@@ -58,7 +58,7 @@ class UserMailer:
 
         mail = self.send_email(email=self.content['email'],
                           email_msg_html=email_msg_html,
-                          mail_subject='Reset password has been requested')
+                          mail_subject=self.MSG_SUBJECTS[self.content['topic']])
 
         logging.info("mailer ::: send_change_password_email ::: mailed send successfully")
 
