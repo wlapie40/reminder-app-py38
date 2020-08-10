@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: ryanote-auth
-        image: pijanyrecznik/auth:1.0.4
+        image: wlapie40/auth:1.0.0
         imagePullPolicy: Always
         ports:
           - name: http

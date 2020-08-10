@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: ryanote-web
-        image: pijanyrecznik/mailer:1.0.6
+        image: wlapie40/mailer:1.0.0
         imagePullPolicy: Always
         ports:
           - name: http
