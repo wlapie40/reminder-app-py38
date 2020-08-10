@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ryanote-auth
+spec:
+  selector:
+    matchLabels:
+      app: ryanote-auth
+  replicas: 1
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 2
+        maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: ryanote-auth
+    spec:
+      containers:
+      - name: ryanote-auth
+        image: pijanyrecznik/auth:1.0.4
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 5090
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+#        livenessProbe:
+#          httpGet:
+#            path: /auth/healthcheck
+#            port: 5090
+#          initialDelaySeconds: 5
+#          periodSeconds: 3
+        envFrom:
+          - configMapRef:
+              name: ryanote-dev
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ryanote-auth
+spec:
+#  type: LoadBalancer
+  sessionAffinity: None
+  ports:
+  - port: 5090
+    targetPort: 5090
+  selector:
+    app: ryanote-auth

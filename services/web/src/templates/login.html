@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+<div class="form-wrapper">
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    <div class="row align-items-center justify-content-center">
+        <div class="col-md-4">
+            <h3>Log In</h3>
+            <form method="POST" action="/notes/login">
+                {{ form.csrf_token }}
+                {{ wtf.form_field(form.email, class='form-control') }}
+                {{ wtf.form_field(form.password, class='form-control') }}
+                <br>
+                <p><input type=submit class='btn btn-warning btn-block'>
+                <hr>
+
+
+                <div class="login-signup">
+                    <span>Don't have an account? <a href="{{ url_for('auth_bp.signup') }}">Sign up.</a> <br>Forgot password? Click <a href="{{ url_for('request_change_password') }}">here</a> to create a new one.</span>
+                </div>
+
+            </form>
+        </div>
+        <img src="https://sfigiel-ryanote.s3.eu-central-1.amazonaws.com/apeach_muzi.jpg" class="rounded-circle" width="400"
+             height="400">
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+version: '3.5'
+
+services:
+  nginx:
+    build: ./services/nginx
+    networks:
+      testing_net:
+        ipv4_address: ${INGRESS}
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf
+#      - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - app
+      - mailer
+
+  app:
+    build: ./services/web
+    depends_on:
+      - db
+    env_file:
+      - .env
+    networks:
+        testing_net:
+            ipv4_address: ${FLASK_HOST}
+    ports:
+      - ${FLASK_PORT}:${FLASK_PORT}
+    restart: always
+
+#  scheduler:
+#    build: services/scheduler/.
+#    depends_on:
+#      - app
+#    env_file:
+#      - .env
+#    networks:
+#      testing_net:
+#        ipv4_address: ${FLASK_SCHEDULER_HOST}
+#    ports:
+#      - ${FLASK_SCHEDULER_PORT}:${FLASK_SCHEDULER_PORT}
+#    restart: always
+
+  mailer:
+    build: services/mailer/.
+    depends_on:
+      - app
+    env_file:
+      - .env
+    networks:
+      testing_net:
+        ipv4_address: ${FLASK_MAILER_HOST}
+    ports:
+      - ${FLASK_MAILER_PORT}:${FLASK_MAILER_PORT}
+    restart: always
+
+  auth:
+    build: services/auth/.
+    depends_on:
+      - app
+    env_file:
+      - .env
+    networks:
+      testing_net:
+        ipv4_address: ${FLASK_AUTH_HOST}
+    ports:
+      - ${FLASK_AUTH_PORT}:${FLASK_AUTH_PORT}
+    restart: always
+
+  db:
+    image: postgres:12
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: postgres
+       POSTGRES_DB: postgres
+    env_file:
+      - .env
+    networks:
+        testing_net:
+            ipv4_address: ${POSTGRES_HOST}
+    restart: always
+
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PSWD}
+    ports:
+      - "6000:80"
+    env_file:
+      - .env
+    networks:
+        testing_net:
+            ipv4_address: ${PGADMIN4_HOST}
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
+networks:
+    testing_net:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.28.0.0/16

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    <div class="card">
+        <h5 class="card-header">{{data.subject}}</h5>
+        <div class="card-body">
+            <h4 class="card-title"><p style="color: orange"><strong>{{ data.topic }}</strong></p></h4>
+            <p class="card-text">{{data.text|safe}}
+                <br>
+                <br>
+                {% if data.url|length %}
+                <a href="{{ data.url }}" class="btn btn-primary"><i class="fa fa-cloud" aria-hidden="true"></i> Go to
+                    URL</a>
+                {% else %}
+                {% endif %}
+                  <a href="{{ url_for('edit_note', id=data.id, alt_id='a49ec75dcfb246a79cfd27664849bd9a') }}" class="btn btn-info"><i
+                    class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit note</a>
+            </p>
+            {% if data.repeat_at <= today %}
+                     <a href="{{ url_for('postphone_note', note_id=data.id, topic=data.topic, days=1) }}"
+               class="btn btn-success">1 day</a>
+            <a href="{{ url_for('postphone_note', note_id=data.id, topic=data.topic, days=5) }}"
+               class="btn btn-success">5 days</a>
+            <a href="{{ url_for('postphone_note', note_id=data.id, topic=data.topic, days=14) }}" class="btn btn-warning">14
+                days</a>
+            <a href="{{ url_for('postphone_note', note_id=data.id, topic=data.topic, days=30) }}" class="btn btn-dark">30
+                days</a>
+               <a href="{{ url_for('postphone_note', note_id=data.id, topic=data.topic, days=90) }}" class="btn btn-dark">90
+                days</a>
+            {% else %}
+            <br>
+            <h6>Next repeat at {{data.repeat_at}}</h6>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <img src="https://sfigiel-ryanote.s3.eu-central-1.amazonaws.com/ryan.png" class="rounded-circle" width="400"
+         height="400">
+</div>
+{% endblock %}

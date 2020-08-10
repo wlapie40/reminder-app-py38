@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ryanote-mailer
+spec:
+  selector:
+    matchLabels:
+      app: ryanote-mailer
+  replicas: 1
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 2
+        maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: ryanote-mailer
+    spec:
+      containers:
+      - name: ryanote-web
+        image: pijanyrecznik/mailer:1.0.4
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 5080
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+#        readinessProbe:
+#          httpGet:
+#            path: /notes/healthcheck
+#            port: 5080
+#          initialDelaySeconds: 3
+#          periodSeconds: 5
+#        livenessProbe:
+#          httpGet:
+#            path: /healthcheck
+#            port: 5080
+#          initialDelaySeconds: 20
+#          periodSeconds: 5
+        envFrom:
+          - configMapRef:
+              name: ryanote-dev
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ryanote-mailer
+spec:
+#  type: LoadBalancer
+  sessionAffinity: None
+  ports:
+  - port: 5080
+    targetPort: 5080
+  selector:
+    app: ryanote-mailer

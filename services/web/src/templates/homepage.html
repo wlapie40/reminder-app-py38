@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">-->
+
+<body background="{{ url_for('static', filename='homepage.png') }}">
+
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">G'day mate !</h1>
+        <p class="lead">Welcome to Ryanote, this the tool which you were waiting for.
+            Thanks Ryanote you would be able to create notes afterwards our super intelligent algorithm would bring them back
+            just in time</p>
+        <hr class="my-4">
+        {% if current_user.is_authenticated %}
+        <p>Go back to You dashboard</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('get_all_notes', alt_id=current_user.alternative_id) }}" role="button">All notes</a>
+        {% else %}
+        <p>Don't have an account?</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth_bp.signup') }}" role="button">Register</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

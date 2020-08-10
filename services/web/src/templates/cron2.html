@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+    <ul class="list-group">
+        {{data}}
+        {% for note in data %}
+        NOTE
+        <li class="list-group-item">Topic: {{note.Notes.topic}}</li>
+        <li class="list-group-item">URL: {{note.Notes.url}}</li>
+        <li class="list-group-item">Subject: {{note.Notes.subject}}</li>
+        <li class="list-group-item">Text: {{note.Notes.text}}</li>
+        <li class="list-group-item">ID: {{note.Notes.id}}</li>
+        <li class="list-group-item">Email: {{note.Users.email}}</li>
+        <br>
+        <li class="list-group-item">Alt_id: {{note.Users.alternative_id}}</li>
+        <a href="{{ url_for('get_note', note_id=note.Notes.id, topic=note.Notes.topic) }}" class="btn btn-info"><i class="fa fa-trash" aria-hidden="true"></i> Show note</a>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

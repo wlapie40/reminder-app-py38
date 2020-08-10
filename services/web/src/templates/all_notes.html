@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<!--<div class="container-fluid">-->
+<div class="container">
+    {% if notes %}
+    {% for note in notes %}
+    <div class="card">
+        <div class="card-header">
+            {{ note.subject }}
+        </div>
+        <div class="card-body">
+            <h4 class="card-title"><p style="color: orange"><strong>{{ note.topic }}</strong></p></h4>
+            <h7><p class="text-muted">{{note.created}}</p></h7>
+            <p class="card-text">{{ note.text|safe }}</p>
+            {% if note.url|length %}
+            <a href="{{ note.url }}" class="btn btn-primary"><i class="fa fa-cloud" aria-hidden="true"></i> Go to
+                URL</a>
+            {% else %}
+            {% endif %}
+            <a href="{{ url_for('edit_note', id=note.id, alt_id=current_user.alternative_id) }}"
+               class="btn btn-info"><i
+                    class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a> &nbsp;&nbsp; &nbsp;&nbsp;
+            <a href="{{ url_for('delete', id=note.id, alt_id=current_user.alternative_id) }}"
+               class="btn btn-danger"><i
+                    class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+        </div>
+        <div class="card-footer text-muted">
+            Repeat at: {{ note.repeat_at }}
+        </div>
+    </div>
+    <br>
+    {% endfor %}
+    {% else %}
+    <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+        <div class="card-body">
+            <p class="card-text"><h5>아직 메모를 작성하지 않았습니다.<a
+                href="{{ url_for('create_note', alt_id=current_user.alternative_id) }}">여기를 클릭하여</a> 추가하십시오.
+        </h5></p>
+        </div>
+    </div>
+    <br>
+    <img src="https://sfigiel-ryanote.s3.eu-central-1.amazonaws.com/ryan1.PNG" alt="s3 error">
+    {% endif %}
+
+</div>
+{% endblock %}

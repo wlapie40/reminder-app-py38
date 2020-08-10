@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-md-8">
+            <h3>Edit note</h3>
+            <form action="{{ url_for('edit_note', id=note.id, alt_id=current_user.alternative_id) }}" method="POST"
+                  class="form" role="form">
+                {{ form.csrf_token() }}
+                <d1>
+                    {{ wtf.form_field(form.topic, class='form-control', value=note.topic) }}
+                    {{ wtf.form_field(form.subject, class='form-control', value=note.subject) }}
+                    {{ wtf.form_field(form.url, class='form-control', value=note.url) }}
+                    {{ ckeditor.create(value=note.text) }}
+                    {{ ckeditor.load() }}
+                    {{ ckeditor.config(name='text') }}
+                    {{ wtf.form_field(form.repeat_at, class='form-control', value=note.repeat_at) }}
+                    {{ wtf.form_field(form.created, class='form-control', value=note.created) }}
+                    <br>
+                </d1>
+                <br>
+                <p><input type=submit class='btn btn-warning btn-block'>
+                <hr>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
